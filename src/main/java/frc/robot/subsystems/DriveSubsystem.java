@@ -7,12 +7,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
-
+import static frc.robot.Constants.BaseMotorCosntants.*;
 import static frc.robot.Constants.DriveConstants.*;
 
 
-public class Drive extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
 
     SparkMax leftRearMotor = new SparkMax(leftRearMotorChannel, brushless);
     SparkMax rightForwardMotor = new SparkMax(rightForwardMotorChannel, brushless);
@@ -21,17 +20,10 @@ public class Drive extends SubsystemBase {
         
     private final DifferentialDrive drive = new DifferentialDrive(leftForwardMotor, rightForwardMotor);
     
-    SlewRateLimiter forwardLimits = new SlewRateLimiter(DriveConstants.slewLimits);
-    SlewRateLimiter turnLimits = new SlewRateLimiter(DriveConstants.slewLimits);
+    SlewRateLimiter forwardLimits = new SlewRateLimiter(slewLimits);
+    SlewRateLimiter turnLimits = new SlewRateLimiter(slewLimits);
 
-
-    private final static Drive INSTANCE = new Drive();
-
-    public static Drive getInstance() {
-        return INSTANCE;
-    }
-
-    public Drive() {
+    public DriveSubsystem() {
 
         SparkMaxConfig baseConfig = new SparkMaxConfig();
         baseConfig.smartCurrentLimit(maxCurrent);
