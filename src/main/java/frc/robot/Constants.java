@@ -43,7 +43,7 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final int susanMotor = 5;
+    public static final int susanMotorChannel = 5;
     public static final int shooterMotorChannel = 6;
 
   }
@@ -51,7 +51,7 @@ public final class Constants {
   public static class OperatorConstants {
 
     public static final int driverControllerPort = 0;
-    
+
   }
 
 }

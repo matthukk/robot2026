@@ -7,12 +7,16 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.RotateTurretCommand;
+import frc.robot.commands.ShootTurretCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -25,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
+  private final TurretSubsystem turret = new TurretSubsystem();
   private final DriveSubsystem drive = new DriveSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -37,16 +41,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    drive.setDefaultCommand(
-      new RunCommand(
-        () -> drive.arcadeDrive(
-          controller.getLeftY(), 
-          controller.getRightX()
-        ),
-        drive
-      )
-    );
-  
+        
   }
 
   /**
@@ -60,11 +55,26 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    
-    
+    drive.setDefaultCommand(
+      new RunCommand(
+        () -> drive.arcadeDrive(
+          controller.getLeftY(), 
+          controller.getRightX()
+        ),
+        drive
+      )
+    );
+
+    new JoystickButton(controller, PS5Controller.Button.kL1.value)
+      .whileTrue(new RotateTurretCommand(turret, 0.4));
+
+    new JoystickButton(controller, PS5Controller.Button.kR1.value)
+      .whileTrue(new RotateTurretCommand(turret, -0.4));
+
+    new Trigger(() -> controller.getR2Axis() > 0.2)
+      .whileTrue(new ShootTurretCommand(turret));
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     if(controller.getCrossButton()){

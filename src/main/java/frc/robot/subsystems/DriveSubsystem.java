@@ -20,8 +20,8 @@ public class DriveSubsystem extends SubsystemBase {
         
     private final DifferentialDrive drive = new DifferentialDrive(leftForwardMotor, rightForwardMotor);
     
-    SlewRateLimiter forwardLimits = new SlewRateLimiter(slewLimits);
-    SlewRateLimiter turnLimits = new SlewRateLimiter(slewLimits);
+    SlewRateLimiter forwardSlewLimits = new SlewRateLimiter(slewLimits);
+    SlewRateLimiter turnSlewLimits = new SlewRateLimiter(slewLimits);
 
     public DriveSubsystem() {
 
@@ -64,8 +64,8 @@ public class DriveSubsystem extends SubsystemBase {
         rotate = Math.copySign(rotate * rotate, rotate);
 
         // slew limiting or whatever that is the guide said so
-        speed = forwardLimits.calculate(speed);
-        rotate = turnLimits.calculate(rotate);
+        speed = forwardSlewLimits.calculate(speed);
+        rotate = turnSlewLimits.calculate(rotate);
 
         drive.arcadeDrive(speed, rotate);
 
